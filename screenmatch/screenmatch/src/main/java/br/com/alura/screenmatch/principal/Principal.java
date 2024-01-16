@@ -15,17 +15,72 @@ public class Principal {
     private ConverterDados conversor = new ConverterDados();
     private final String ENDERECO = "http://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=b8daf779";
+    private List<DadosSerie> dadosSeries = new ArrayList<>();
 
     public void exibirMenu() {
-        System.out.println("*****************************************************************");
-        System.out.println("Digite sua série preferida: ");
-        System.out.println("*****************************************************************");
+        var opcao = -1;
+        while (opcao != 0) {
+            var menu = """
+                    1 - Buscar séries
+                    2 - tudo teste
+                    3 - Listar séries buscadas
+                    4 -
+                    0 - Sair
+                    """;
+            System.out.println(menu);
+            opcao = leitura.nextInt();
+            leitura.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    buscarSerieWeb();
+                    break;
+                case 2:
+                    tudo();
+                    break;
+                case 3:
+                    listarSeriesBuscadas();
+                    break;
+                case 0:
+                    System.out.println("Saindo ...");
+                default:
+                    System.out.println("Opção inválida");
+            }
+        }
+    }
+
+
+    private void buscarSerieWeb() {
+        DadosSerie dados = getDadosSerie();
+        dadosSeries.add(dados);
+        System.out.println(dados);
+    }
+
+    private void listarSeriesBuscadas() {
+        dadosSeries.forEach(System.out::println);
+    }
+
+
+    private DadosSerie getDadosSerie() {
+        System.out.println("Digite o nome da série para realizar a busca");
         var nomeSerie = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
         DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
-        System.out.println(dados);
+        return dados;
+    }
 
 
+
+    private void tudo() {
+        System.out.println("Digite o nome da série para realizar a busca");
+        var nomeSerie = leitura.nextLine();
+        var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
+        System.out.println(json);
+    }
+ }
+
+
+/*
         List<DadosTemporada> temporadas = new ArrayList<>();
 
         for (int i = 1; i <= dados.totalTemporadas(); i++) {
@@ -138,7 +193,6 @@ public class Principal {
         System.out.println("Média: " + est.getAverage());
         System.out.println("Melhor episódio: " + est.getMax());
         System.out.println("Pior episódio: " + est.getMin());
-        System.out.println("Quantidade: " + est.getCount());
+        System.out.println("Quantidade: " + est.getCount());*/
 
-    }
-}
+
