@@ -22,7 +22,7 @@ public class Principal {
         while (opcao != 0) {
             var menu = """
                     1 - Buscar séries
-                    2 - tudo teste
+                    2 - Buscar episódios
                     3 - Listar séries buscadas
                     4 -
                     0 - Sair
@@ -36,7 +36,7 @@ public class Principal {
                     buscarSerieWeb();
                     break;
                 case 2:
-                    tudo();
+                    buscarEpisodioPorSerie();
                     break;
                 case 3:
                     listarSeriesBuscadas();
@@ -50,6 +50,8 @@ public class Principal {
     }
 
 
+
+
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
         dadosSeries.add(dados);
@@ -57,9 +59,26 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        dadosSeries.forEach(System.out::println);
+
+        List<Serie> series = new ArrayList<>();
+        series = dadosSeries.stream()
+                        .map(d -> new Serie(d))
+                                .collect(Collectors.toList());
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero));
     }
 
+    private void buscarEpisodioPorSerie() {
+        DadosSerie dadosSerie = getDadosSerie();
+        List<DadosTemporada> temporadas = new ArrayList<>();
+
+        for(int i= 1;  i<=dadosSerie.totalTemporadas(); i++){
+            var json = consumo.obterDados(ENDERECO+dadosSerie.titulo().replace(" ", "+")+ "&season=" + i + API_KEY);
+            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            temporadas.add(dadosTemporada);
+        }
+        temporadas.forEach(System.out::println);
+    }
 
     private DadosSerie getDadosSerie() {
         System.out.println("Digite o nome da série para realizar a busca");
@@ -71,12 +90,7 @@ public class Principal {
 
 
 
-    private void tudo() {
-        System.out.println("Digite o nome da série para realizar a busca");
-        var nomeSerie = leitura.nextLine();
-        var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
-        System.out.println(json);
-    }
+
  }
 
 
