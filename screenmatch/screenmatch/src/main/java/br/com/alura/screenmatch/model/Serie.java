@@ -5,7 +5,6 @@ import br.com.alura.screenmatch.service.ConsultaChatGPT;
 import java.util.OptionalDouble;
 
 public class Serie {
-
     private String titulo;
     private Integer totalTemporadas;
     private Double avaliacao;
@@ -17,13 +16,11 @@ public class Serie {
     public Serie(DadosSerie dadosSerie){
         this.titulo = dadosSerie.titulo();
         this.totalTemporadas = dadosSerie.totalTemporadas();
-        //OptionalDouble: lidar com valores possivelmente nulos de forma mais segura e expressiva
-        // OptionalDouble para representar a possibilidade de um valor primitivo double estar presente ou ausente, sem a necessidade de lidar diretamente com valores nulos.
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
-        this.sinopse = ConsultaChatGPT.obterTraducao(dadosSerie.sinopse());
+        this.sinopse = ConsultaChatGPT.obterTraducao(dadosSerie.sinopse()).trim();
     }
 
     public String getTitulo() {
@@ -85,12 +82,13 @@ public class Serie {
     @Override
     public String toString() {
         return
-                " genero=" + genero +
-                " titulo='" + titulo + '\'' +
-                ", totalTemporadas=" + totalTemporadas +
-                ", avaliacao=" + avaliacao +
-                ", atores='" + atores + '\'' +
-                ", poster='" + poster + '\'' +
-                ", sinopse='" + sinopse + '\'';
+                "genero=" + genero +
+                        ", titulo='" + titulo + '\'' +
+                        ", totalTemporadas=" + totalTemporadas +
+                        ", avaliacao=" + avaliacao +
+
+                        ", atores='" + atores + '\'' +
+                        ", poster='" + poster + '\'' +
+                        ", sinopse='" + sinopse + '\'';
     }
 }
